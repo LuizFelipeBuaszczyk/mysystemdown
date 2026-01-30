@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from django.db.utils import IntegrityError
-from config.exceptions import BusinessRuleError
+from config.exceptions import BusinessRuleError, AuthenticationError
 
 
 def custom_exception_handler(exc, context):
@@ -28,6 +28,13 @@ def custom_exception_handler(exc, context):
             },
             status=status.HTTP_400_BAD_REQUEST
         )  
+    
+    if isinstance(exc, AuthenticationError):
+        return Response(
+            {"error": str(exc)},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+        
 
     if isinstance(exc, BusinessRuleError):
         return Response(

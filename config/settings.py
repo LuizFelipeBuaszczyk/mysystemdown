@@ -42,7 +42,10 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    "EXCEPTION_HANDLER": "config.exceptions_handler.custom_exception_handler"
+    "EXCEPTION_HANDLER": "config.exceptions_handler.custom_exception_handler",
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
 
 AUTH_USER_MODEL = "users.User"

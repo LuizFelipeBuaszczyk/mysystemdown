@@ -2,6 +2,7 @@ from rest_framework.views import exception_handler
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
+from django.db.utils import IntegrityError
 from config.exceptions import BusinessRuleError
 
 
@@ -15,6 +16,15 @@ def custom_exception_handler(exc, context):
             {
                 "error": "Validation Error",
                 "fields": exc.detail
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )  
+        
+    if isinstance(exc, IntegrityError):
+        return Response(
+            {
+                "error": "Database Integrity Error",
+                "detail": exc.args
             },
             status=status.HTTP_400_BAD_REQUEST
         )  
@@ -33,6 +43,7 @@ def custom_exception_handler(exc, context):
             status=response.status_code
         )
                 
+    print(str(exc))
     return Response(
         {"error": "Internal Server Error"}, 
         status=status.HTTP_500_INTERNAL_SERVER_ERROR 

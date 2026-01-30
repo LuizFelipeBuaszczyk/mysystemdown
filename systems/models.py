@@ -11,8 +11,7 @@ class System(models.Model):
     )
     name = models.CharField(
         max_length=50, 
-        null=False,
-        unique=True
+        null=False
     )
     description = models.TextField(
         blank=True, 

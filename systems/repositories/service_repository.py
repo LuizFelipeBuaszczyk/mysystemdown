@@ -1,0 +1,25 @@
+from uuid import UUID
+
+from systems.models import Service, System
+
+
+class ServiceRepository:
+    
+    @staticmethod
+    def get_all(is_active: bool):
+        return Service.objects.values(is_active=is_active)
+    
+    @staticmethod
+    def create_system(data: dict):
+        return Service.objects.create(**data)
+    
+    @staticmethod
+    def get_by_title(title: str):
+        return Service.objects.filter(title=title).values()
+    
+    @staticmethod
+    def get_by_system_id(system_id: UUID, is_active: bool):
+        return Service.objects.filter(
+            system_id=system_id, 
+            is_active=is_active
+        )

@@ -37,7 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'systems'
 ]
+
+REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "config.exceptions_handler.custom_exception_handler"
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

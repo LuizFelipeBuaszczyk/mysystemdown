@@ -1,6 +1,9 @@
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
 from iam.exceptions import InvalidCredentialsError, UserInactiveError, AccountNotVerifiedError
+
+from config.exceptions import BusinessRuleError
 
 class AuthService:
     
@@ -24,3 +27,16 @@ class AuthService:
             "access_token": access_token,
             "refresh": str(refresh)
         }
+        
+    @staticmethod
+    def refresh_token(data: dict):
+        try:
+            refresh = RefreshToken(data["refresh"])
+
+            return {
+                "access": str(refresh.access_token),
+                "refresh": str(refresh),  
+            }
+
+        except TokenError:
+            raise BusinessRuleError("Refresh token inválido ou expirado")

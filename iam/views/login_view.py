@@ -27,5 +27,4 @@ class LoginView(APIView):
             result,
             status=status.HTTP_200_OK
             )
-
         

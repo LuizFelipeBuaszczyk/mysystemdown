@@ -1,18 +1,27 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
 
+from iam.serializers.login_serializer import LoginRequestSerializer, LoginResponseSerializer
 from iam.services.auth_service import AuthService
 
 # Create your views here.
 
 class LoginView(APIView):
     
+    @extend_schema(
+        request=LoginRequestSerializer,
+        responses={
+            200: LoginResponseSerializer
+        }
+    )
     def post(self, request):
-        data = request.data
+        serializer = LoginRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
         result = AuthService.login(
-            email=data.get("email"),
-            password=data.get("password")
+            data=serializer.validated_data
         )
         return Response(
             result,

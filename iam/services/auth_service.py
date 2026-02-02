@@ -5,7 +5,10 @@ from iam.exceptions import InvalidCredentialsError, UserInactiveError, AccountNo
 class AuthService:
     
     @staticmethod
-    def login(email: str, password: str):
+    def login(data: dict):
+        email = data.get("email")
+        password = data.get("password")
+        
         user = authenticate(email=email, password=password)
         if not user:
             raise InvalidCredentialsError("Invalid email or password")

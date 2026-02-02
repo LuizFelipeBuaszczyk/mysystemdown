@@ -12,3 +12,8 @@ class MembershipReadSerializer(serializers.ModelSerializer):
         
 class MembershipListReadSerializer(serializers.ListSerializer):
     child = MembershipReadSerializer()
+    
+class MembershipCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Membership
+        fields = ["user", "role"]

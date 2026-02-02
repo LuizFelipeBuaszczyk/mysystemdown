@@ -21,8 +21,7 @@ class SystemService:
         system = SystemRepository.create_system(data)
         data = {
             "user": owner,
-            "system": system,
             "role":"owner"
         }
-        member = MembershipService.create_membership(data)
+        member = MembershipService.create_membership(data=data, user=owner, system=system)
         return system

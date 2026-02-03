@@ -6,8 +6,12 @@ from systems.models import Service, System
 class ServiceRepository:
     
     @staticmethod
-    def get_all(is_active: bool):
-        return Service.objects.values(is_active=is_active)
+    def get_all(system: System):
+        return Service.objects.filter(system=system)
+    
+    @staticmethod
+    def get_all_actives(system: System):
+        return Service.objects.filter(system=system, is_active=True)
     
     @staticmethod
     def create_service(data: dict):

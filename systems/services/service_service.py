@@ -4,10 +4,11 @@ from systems.models import System
 class ServiceService:
 
     @staticmethod
-    def list_services(is_active: bool):
-        return ServiceRepository.get_all(is_active)
+    def list_services(system: System, just_actives: bool):   
+        print(just_actives)   
+        return ServiceRepository.get_all_actives(system) if just_actives else ServiceRepository.get_all(system)
     
     @staticmethod
     def create_service(data: dict, system: System):
         data["system"] = system
-        service = ServiceRepository.create_service(data)
+        return ServiceRepository.create_service(data)

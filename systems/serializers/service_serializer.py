@@ -4,7 +4,7 @@ from systems.models import Service
 class ServiceReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
-        fields = "__all__"
+        fields = ["id", "title", "url", "description", "health_check_interval", "is_active"]
 
 class ServiceWriteSerializer(serializers.ModelSerializer):
     class Meta:

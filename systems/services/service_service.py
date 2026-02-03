@@ -5,7 +5,6 @@ class ServiceService:
 
     @staticmethod
     def list_services(system: System, just_actives: bool):   
-        print(just_actives)   
         return ServiceRepository.get_all_actives(system) if just_actives else ServiceRepository.get_all(system)
     
     @staticmethod

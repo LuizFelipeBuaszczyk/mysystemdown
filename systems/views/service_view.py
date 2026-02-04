@@ -4,19 +4,31 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter
-from systems.models import System
+from uuid import UUID
+
+from systems.models import System, Service
 
 from systems.serializers.service_serializer import ServiceReadSerializer, ServiceWriteSerializer
 from systems.services.service_service import ServiceService
 
 @extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="system_pk",
+                type=UUID,
+                location=OpenApiParameter.PATH,
+                description="System's UUID"
+            ),
+        ]
+    ),
     create=extend_schema(
         request=ServiceWriteSerializer,
         responses={201: ServiceReadSerializer},
         parameters=[
             OpenApiParameter(
                 name="system_pk",
-                type=str,
+                type=UUID,
                 location=OpenApiParameter.PATH,
                 description="System's UUID"
             ),
@@ -25,6 +37,12 @@ from systems.services.service_service import ServiceService
 )
 class ServiceViewSet(GenericViewSet):
     permission_classes = [IsAuthenticated]    
+    queryset = Service.objects.none()
+    
+    def get_serializer_class(self):
+        if self.action == "create":
+            return ServiceWriteSerializer
+        return ServiceReadSerializer
     
     @extend_schema(
         parameters=[            
@@ -38,7 +56,7 @@ class ServiceViewSet(GenericViewSet):
             ),
         ]
     )
-    def list(self, request, system_pk=None):
+    def list(self, request, system_pk: UUID):
         just_actives = request.query_params.get("actives", "false").lower() == "true"
         
         system = get_object_or_404(System.objects.filter(membership__user=request.user), id=system_pk)

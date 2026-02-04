@@ -71,6 +71,12 @@ class Service(models.Model):
         return self.url
     
 class Bot(models.Model):
+    id = models.UUIDField(
+        primary_key=True, 
+        default=uuid4, 
+        editable=False
+    )
+    
     bot_name = models.CharField(
         max_length=50,
         blank=False,

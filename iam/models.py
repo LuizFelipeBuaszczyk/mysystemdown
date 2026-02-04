@@ -1,9 +1,16 @@
+from uuid import uuid4
 from django.conf import settings
 from django.db import models
 from systems.models import System
 
 # Create your models here.
 class Membership(models.Model):
+    id = models.UUIDField(
+        primary_key=True, 
+        default=uuid4, 
+        editable=False
+    )
+    
     ROLE_CHOICES = [
         ("owner", "Owner"),
         ("admin", "Admin"),

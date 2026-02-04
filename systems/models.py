@@ -83,6 +83,13 @@ class Bot(models.Model):
         null=False
     )
     
+    prefix_token = models.CharField(
+        max_length=12,
+        blank=False,
+        null=False,
+        default="bot_token_"
+    )
+    
     api_token = models.CharField(
         max_length=255,
         blank=False,

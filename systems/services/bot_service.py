@@ -1,3 +1,7 @@
+from django.contrib.auth.hashers import make_password
+
+from systems.utils.token import generate_token, PREFIX_BOT_TOKEN
+
 from systems.repositories.bot_repository import BotRepository
 from systems.models import System
 
@@ -10,8 +14,17 @@ class BotService:
     @staticmethod
     def create_bot(data: dict, system: System):
         data["system"] = system
-        return BotRepository.create_bot(data)
+        
+        # Gerando token
+        token = generate_token()
+        data["prefix_token"] =  token[:12] 
+        data["api_token"] = make_password(token)
+        
+        created_bot = BotRepository.create_bot(data)
+        created_bot.api_token = PREFIX_BOT_TOKEN + token
+        return created_bot
     
     @staticmethod
     def delete_bot():
         return BotRepository.delete_bot()
+    

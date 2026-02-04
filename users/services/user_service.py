@@ -5,6 +5,8 @@ class UserService:
     
     @staticmethod
     def create_user(data: dict):
+        #TODO: Após implementar a verificação do email, remover essa linha
+        data['is_verified'] = True
         return UserRepository.create_user(data)
     
     @staticmethod

@@ -37,8 +37,8 @@ from systems.services.service_service import ServiceService
 )
 class ServiceViewSet(GenericViewSet):
     permission_classes = [IsAuthenticated]    
-    queryset = Service.objects.none()
     
+    ## Declara qual serializer será utilizado de acordo com a ação
     def get_serializer_class(self):
         if self.action == "create":
             return ServiceWriteSerializer

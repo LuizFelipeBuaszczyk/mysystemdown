@@ -8,7 +8,7 @@ from uuid import UUID
 
 from systems.services.bot_service import BotService
 from systems.models import System, Bot
-from systems.serializers.bot_serializer import BotReadSerializer, BotWriteSerializer
+from systems.serializers.bot_serializer import BotReadSerializer, BotWriteSerializer, BotReadCreateSerializer
 
 @extend_schema_view(
     list=extend_schema(
@@ -23,7 +23,7 @@ from systems.serializers.bot_serializer import BotReadSerializer, BotWriteSerial
     ),
     create=extend_schema(
         request=BotWriteSerializer,
-        responses={201: BotReadSerializer},
+        responses={201: BotReadCreateSerializer},
         parameters=[
             OpenApiParameter(
                 name="system_pk",
@@ -36,8 +36,8 @@ from systems.serializers.bot_serializer import BotReadSerializer, BotWriteSerial
 )
 class BotViewSet(GenericViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = Bot.objects.none()
     
+    ## Declara qual serializer será utilizado de acordo com a ação
     def get_serializer_class(self):
         if self.action == "create":
             return BotWriteSerializer
@@ -64,6 +64,6 @@ class BotViewSet(GenericViewSet):
         )
         
         return Response(
-            BotReadSerializer(bot).data,
+            BotReadCreateSerializer(bot).data,
             status=status.HTTP_201_CREATED
         )

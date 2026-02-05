@@ -6,37 +6,37 @@ from systems.models import Service
 class ServicePermission(BasePermission):
     
     def has_permission(self, request, view):
-        system_pk = view.kwargs['system_pk']
+        system_pk = view.kwargs.get('system_pk')
 
-        if view.action == "create":
-            return Group.objects.filter(
-                memberships__user=request.user,
-                memberships__system__id=system_pk,
-                permissions__codename="add_service"
-            ).exists()
+        if system_pk:
+            if view.action == "create":
+                return Group.objects.filter(
+                    memberships__user=request.user,
+                    memberships__system__id=system_pk,
+                    permissions__codename="add_service"
+                ).exists()
+            
+            if view.action == "list":
+                return Group.objects.filter(
+                    memberships__user=request.user,
+                    memberships__system__id=system_pk,
+                    permissions__codename="view_service"
+                ).exists()
         
-        if view.action == "list":
-            return Group.objects.filter(
-                memberships__user=request.user,
-                memberships__system__id=system_pk,
-                permissions__codename="view_service"
-            ).exists()
-        
-        return False
+            return False
+        return True
     
-    def has_object_permission(self, request, view, obj):
-        service = Service.objects.filter(
-            user=request.user,
-            system=obj
-        ).select_related("role").first()
-
+    def has_object_permission(self, request, view, obj):       
+        service = obj.system.memberships.filter(
+            user=request.user
+        ).select_related("group").first()
+        
         if not service:
             return False
-
+        
         role = service.group
 
         action_perm_map = {
-            "list": "view_service",
             "retrieve": "view_service",
             "update": "change_service",
             "partial_update": "change_service",

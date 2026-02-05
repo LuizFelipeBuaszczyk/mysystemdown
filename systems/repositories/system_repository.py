@@ -8,7 +8,7 @@ class SystemRepository:
     @staticmethod
     def get_all(user: User):
         return System.objects.filter(
-            membership__user=user
+            memberships__user=user
         ).distinct()
     
     @staticmethod

@@ -13,7 +13,7 @@ class Membership(models.Model):
     )
     
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    system = models.ForeignKey(System, on_delete=models.CASCADE)
+    system = models.ForeignKey(System, on_delete=models.CASCADE, related_name="memberships")
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="memberships")
     
     joined_at = models.DateTimeField(auto_now_add=True)

@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
-from django.contrib.auth.models import Group
 
+from iam.models import Membership
 from systems.models import Bot
 
 class BotPermission(BasePermission):
@@ -9,14 +9,19 @@ class BotPermission(BasePermission):
         system_pk = view.kwargs['system_pk']
 
         if view.action == "create":
-            return Group.objects.filter(
-                memberships__user=request.user,
-                memberships__system__id=system_pk,
-                permissions__codename="add_bot"
+            return Membership.objects.filter(
+                user=request.user,
+                system_id=system_pk,
+                group__permissions__codename="add_bot"
             ).exists()
         
         if view.action == "list":
-            return request.user.has_perm("systems.view_bot")
+            return Membership.objects.filter(
+                user=request.user,
+                system_id=system_pk,
+                group__permissions__codename="view_bot"
+            ).exists()
+        
         
         return False
     

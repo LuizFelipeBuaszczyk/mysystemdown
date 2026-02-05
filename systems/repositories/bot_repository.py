@@ -4,6 +4,10 @@ from systems.models import System
 class BotRepository:
     
     @staticmethod
+    def get_bot_by_prefix(prefix: str):
+        return Bot.objects.filter(prefix_token=prefix).first()
+    
+    @staticmethod
     def get_all(system: System):
         return Bot.objects.filter(system=system)
 

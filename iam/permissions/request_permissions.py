@@ -1,13 +1,18 @@
 from rest_framework.permissions import BasePermission
 
 from systems.models import Service   
+from iam.authentication.token_auth import TokenAuthentication
+
 
 class RequestPermission(BasePermission):
     
     def has_permission(self, request, view):
         service_pk = view.kwargs.get("service_pk", None)
-        #print(request.headers) # TODO: Implementar validação header -> Token BOT apenas eles poderão inserir
         
+        if not request.user.is_authenticated:
+            return TokenAuthentication.validate_bot_token(request.headers, service_pk=service_pk)
+
+     
         if view.action == "list":
             return Service.objects.filter(
                 id=service_pk,
@@ -15,6 +20,7 @@ class RequestPermission(BasePermission):
                 system__memberships__group__permissions__codename="view_request"
             ).exists()
             
+        
         return False
     
     def has_object_permission(self, request, view, obj):

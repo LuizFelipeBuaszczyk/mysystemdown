@@ -1,4 +1,5 @@
 from django.contrib.auth.hashers import make_password
+import time
 
 from systems.utils.token import generate_token, PREFIX_BOT_TOKEN
 
@@ -17,11 +18,11 @@ class BotService:
         
         # Gerando token
         token = generate_token()
-        data["prefix_token"] =  token[:12] 
+        data["prefix_token"] =  str(int(time.time()))
         data["api_token"] = make_password(token)
         
         created_bot = BotRepository.create_bot(data)
-        created_bot.api_token = PREFIX_BOT_TOKEN + token
+        created_bot.api_token = f"{PREFIX_BOT_TOKEN}{data["prefix_token"]}_{token}"
         return created_bot
     
     @staticmethod

@@ -8,7 +8,7 @@ from uuid import UUID
 from iam.permissions.service_permissions import ServicePermission   
 from systems.models import System, Service
 
-from systems.serializers.service_serializer import ServiceReadSerializer, ServiceWriteSerializer
+from systems.serializers.service_serializer import SystemServiceReadSerializer, SystemServiceWriteSerializer
 from systems.services.service_service import ServiceService
 
 @extend_schema_view(
@@ -23,8 +23,8 @@ from systems.services.service_service import ServiceService
         ]
     ),
     create=extend_schema(
-        request=ServiceWriteSerializer,
-        responses={201: ServiceReadSerializer},
+        request=SystemServiceWriteSerializer,
+        responses={201: SystemServiceReadSerializer},
         parameters=[
             OpenApiParameter(
                 name="system_pk",
@@ -41,8 +41,8 @@ class ServiceViewSet(GenericViewSet):
     ## Declara qual serializer será utilizado de acordo com a ação
     def get_serializer_class(self):
         if self.action == "create":
-            return ServiceWriteSerializer
-        return ServiceReadSerializer
+            return SystemServiceWriteSerializer
+        return SystemServiceReadSerializer
     
     @extend_schema(
         parameters=[            
@@ -63,13 +63,13 @@ class ServiceViewSet(GenericViewSet):
         services = ServiceService.list_services(system=system, just_actives=just_actives)
         
         return Response(
-            data=ServiceReadSerializer(services, many=True).data,
+            data=SystemServiceReadSerializer(services, many=True).data,
             status=status.HTTP_200_OK
         )      
 
     def create(self, request, system_pk=None):
         system = get_object_or_404(System, id=system_pk)
-        serializer = ServiceWriteSerializer(data=request.data)
+        serializer = SystemServiceWriteSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         service = ServiceService.create_service(
@@ -78,6 +78,6 @@ class ServiceViewSet(GenericViewSet):
         )
         
         return Response(
-            ServiceReadSerializer(service).data,
+            SystemServiceReadSerializer(service).data,
             status=status.HTTP_201_CREATED
         )

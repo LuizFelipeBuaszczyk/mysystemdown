@@ -62,7 +62,7 @@ class BotViewSet(GenericViewSet):
         return BotReadSerializer
     
     def list(self, request, system_pk: UUID):
-        system = get_object_or_404(System.objects.filter(membership__user=request.user), id=system_pk)
+        system = get_object_or_404(System.objects.filter(memberships__user=request.user), id=system_pk)
         bots = BotService.get_all(system=system)
         
         return Response(
@@ -71,7 +71,7 @@ class BotViewSet(GenericViewSet):
         )
     
     def create(self, request, system_pk: UUID):
-        system = get_object_or_404(System.objects.filter(membership__user=request.user), id=system_pk)
+        system = get_object_or_404(System.objects.filter(memberships__user=request.user), id=system_pk)
 
         serializer = BotWriteSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -87,7 +87,7 @@ class BotViewSet(GenericViewSet):
         )
         
     def destroy(self, request, system_pk: UUID, pk: UUID):
-        system = get_object_or_404(System.objects.filter(membership__user=request.user), id=system_pk)
+        system = get_object_or_404(System.objects.filter(memberships__user=request.user), id=system_pk)
         bot = get_object_or_404(Bot, id=pk)
 
         BotService.delete_bot(bot=bot)

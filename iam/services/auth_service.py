@@ -4,6 +4,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from iam.exceptions import InvalidCredentialsError, UserInactiveError, AccountNotVerifiedError
 
 from config.exceptions import BusinessRuleError
+from systems.repositories.bot_repository import BotRepository
 
 class AuthService:
     

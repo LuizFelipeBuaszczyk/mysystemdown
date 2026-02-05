@@ -6,7 +6,7 @@ from systems.models import Service
 class ServicePermission(BasePermission):
     
     def has_permission(self, request, view):
-        system_pk = view.kwargs.get('system_pk')
+        system_pk = view.kwargs.get('system_pk', None)
 
         if system_pk:
             if view.action == "create":

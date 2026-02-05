@@ -25,5 +25,5 @@ class SystemService:
             "user": owner,
             "group": group
         }
-        member = MembershipService.create_membership(data=data, user=owner, system=system)
+        member = MembershipService.create_membership(data=data, system=system)
         return system

@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from systems.models import System, Bot, Service
 from iam.models import Membership
+from services.models import Request
 
 class Command(BaseCommand):
     # Manipula os grupos
@@ -19,6 +20,7 @@ class Command(BaseCommand):
         self._add_bot_permissions()
         self._add_service_permissions()
         self._add_membership_permissions()
+        self._add_request_permissions()
         
         self.stdout.write(self.style.SUCCESS("Group permissions seed completed successfully"))
         
@@ -95,5 +97,22 @@ class Command(BaseCommand):
 
         self.viewer.permissions.add(*perms.filter(
             codename__in=["view_membership"]
+        ))
+        
+    def _add_request_permissions(self):
+        # Busca todas as permissões de Membership
+        content_type  = ContentType.objects.get_for_model(Request)
+        perms = Permission.objects.filter(content_type=content_type) 
+        
+        self.owner.permissions.add(*perms.filter(
+            codename__in=["view_request", "delete_request"]
+        ))
+
+        self.admin.permissions.add(*perms.filter(
+            codename__in=["view_request", "delete_request"]
+        ))
+
+        self.viewer.permissions.add(*perms.filter(
+            codename__in=["view_request"]
         ))
         

@@ -63,11 +63,11 @@ SHARED_APPS = [
     'django.contrib.staticfiles',
 
     'users',
+    'iam'
 ]
 
 TENANT_APPS = [    
     'systems',
-    'iam',
     'services', 
 ]
 
@@ -183,4 +183,4 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 TENANT_MODEL = 'tenants.Client'
-TEANANT_DOMAIN_MODEL = 'tenants.Domain'
+TENANT_DOMAIN_MODEL = 'tenants.Domain'

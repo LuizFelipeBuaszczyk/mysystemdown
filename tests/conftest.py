@@ -85,5 +85,7 @@ pytest_plugins = [
     "tests.fixtures.user_fixture",
     "tests.fixtures.tenant_fixture",
     "tests.fixtures.system_fixture",
-    "tests.fixtures.tenant_fixture"
+    "tests.fixtures.tenant_fixture",
+    "tests.fixtures.service_fixture",
+    "tests.fixtures.bot_fixture",
 ]

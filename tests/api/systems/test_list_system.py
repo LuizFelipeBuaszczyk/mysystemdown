@@ -14,7 +14,6 @@ def test_list_systems(tenant_client, systems):
     url = reverse("systems-list")
     
     for system in systems:
-        print(system)
         system.save()
     
     response = tenant_client.get(path=url)

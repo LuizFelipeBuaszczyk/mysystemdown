@@ -1,5 +1,10 @@
 import pytest
 from tests.factories.system_factory import SystemFactory
+from django_tenants.utils import schema_context
+
+@pytest.fixture
+def system():
+    return SystemFactory.build()
 
 @pytest.fixture
 def systems():

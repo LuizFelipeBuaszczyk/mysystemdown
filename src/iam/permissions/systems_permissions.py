@@ -1,15 +1,17 @@
 from rest_framework.permissions import BasePermission
+from django.contrib.auth.models import Group
 from iam.models import Membership
+from iam.utils.viewaction_map import get_perm
 
 class SystemPermission(BasePermission):
     
     def has_permission(self, request, view):
-        if view.action == "create":
-            return request.user.has_perm("systems.add_system")
-        if view.action == "list":
-            return request.user.has_perm("systems.view_system")
-        
-        return False
+        codename = get_perm(view.action)
+        return Group.objects.filter(
+            memberships__user=request.user,
+            memberships__tenant=request.tenant,
+            permissions__codename=codename + "_system"
+        ).exists()
     
     def has_object_permission(self, request, view, obj):
         

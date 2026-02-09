@@ -1,29 +1,18 @@
 from rest_framework.permissions import BasePermission
+from django.contrib.auth.models import Group
 
-from iam.models import Membership
+from iam.utils.viewaction_map import get_perm
 from systems.models import Bot
 
 class BotPermission(BasePermission):
     
     def has_permission(self, request, view):
-        system_pk = view.kwargs['system_pk']
-
-        if view.action == "create":
-            return Membership.objects.filter(
-                user=request.user,
-                tenant=request.tenant,
-                group__permissions__codename="add_bot"
-            ).exists()
-        
-        if view.action == "list":
-            return Membership.objects.filter(
-                user=request.user,
-                tenant=request.tenant,
-                group__permissions__codename="view_bot"
-            ).exists()
-        
-        
-        return False
+        codename = get_perm(view.action)
+        return Group.objects.filter(
+            memberships__user=request.user,
+            memberships__tenant=request.tenant,
+            permissions__codename=f"{codename}_bot"
+        ).exists()
     
     def has_object_permission(self, request, view, obj):
         bot = Bot.objects.filter(

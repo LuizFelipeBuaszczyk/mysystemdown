@@ -1,5 +1,6 @@
 from rest_framework.permissions import BasePermission
 from django.contrib.auth.models import Group
+from iam.utils.viewaction_map import get_perm
 
 from systems.models import Service
 
@@ -9,20 +10,13 @@ class ServicePermission(BasePermission):
         system_pk = view.kwargs.get('system_pk', None)
 
         if system_pk:
-            if view.action == "create":
-                return Group.objects.filter(
-                    memberships__user=request.user,
-                    memberships__tenant=request.tenant,
-                    permissions__codename="add_service"
-                ).exists()
+            codename = get_perm(view.action)
+            return Group.objects.filter(
+                memberships__user=request.user,
+                memberships__tenant=request.tenant,
+                permissions__codename=f"{codename}_service"
+            ).exists()
             
-            if view.action == "list":
-                return Group.objects.filter(
-                    memberships__user=request.user,
-                    memberships__tenant=request.tenant,
-                    permissions__codename="view_service"
-                ).exists()
-        
         return False
 
     

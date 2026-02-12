@@ -54,3 +54,10 @@ Para executar o projeto é necessário estar dentro da pasta `/src`. O padrão p
 ``` shell
 python manage.py runserver 8000
 ```
+
+### 4.1 Execução com Docker
+É possível executar o projeto com o *Docker Compose*.
+
+``` shell
+docker compose up -d
+```

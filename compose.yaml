@@ -11,8 +11,14 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     networks:
       - net-mysystemdown
+
   redis:
     container_name: redis
     image: redis
@@ -20,16 +26,31 @@ services:
       - "6379:6379"
     networks:
       - net-mysystemdown
-
   api:
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+      
     container_name: api
     build: .
     ports:
       - "8000:8000"
     env_file:
       - .env
+    entrypoint: /entrypoint-api.sh
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    networks:
+      - net-mysystemdown      
+
+  worker:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    container_name: api-worker
+    build: .
+    env_file:
+      - .env
+    entrypoint: /entrypoint-worker.sh
     networks:
       - net-mysystemdown
 

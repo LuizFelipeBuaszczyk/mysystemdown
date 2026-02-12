@@ -16,4 +16,11 @@ WORKDIR /app
 
 COPY ./src .
 
+COPY /docker/entrypoint-api.sh /entrypoint-api.sh
+COPY /docker/entrypoint-worker.sh /entrypoint-worker.sh
+
+RUN chmod +x /entrypoint-*.sh
+
+EXPOSE 8000
+
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
